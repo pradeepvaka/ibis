@@ -14,6 +14,7 @@ from sqlglot.dialects import (
     MySQL,
     Oracle,
     Postgres,
+    Presto,
     Snowflake,
     Spark,
     SQLite,
