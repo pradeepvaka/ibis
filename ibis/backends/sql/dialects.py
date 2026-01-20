@@ -19,6 +19,7 @@ from sqlglot.dialects import (
     SQLite,
     Trino,
 )
+from sqlglot.dialects import Presto as _Presto
 from sqlglot.dialects import ClickHouse as _ClickHouse
 from sqlglot.dialects.dialect import rename_func
 from sqlglot.helper import find_new_name, seq_get
@@ -529,3 +530,8 @@ Databricks.Generator.TRANSFORMS |= {
         ]
     )
 }
+
+
+# Presto is very similar to Trino, so we use the Presto dialect from sqlglot
+class Presto(_Presto):
+    pass

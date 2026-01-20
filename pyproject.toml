@@ -231,6 +231,14 @@ risingwave = [
   "pandas>=1.5.3,<3",
   "rich>=12.4.4",
 ]
+presto = [
+  "presto-python-client>=0.8.3",
+  "pyarrow>=10.0.1",
+  "pyarrow-hotfix>=0.4",
+  "numpy>=1.23.2,<3",
+  "pandas>=1.5.3,<3",
+  "rich>=12.4.4",
+]
 trino = [
   "trino>=0.321",
   "pyarrow>=10.0.1",
@@ -324,6 +332,7 @@ mssql = "ibis.backends.mssql"
 oracle = "ibis.backends.oracle"
 polars = "ibis.backends.polars"
 postgres = "ibis.backends.postgres"
+presto = "ibis.backends.presto"
 risingwave = "ibis.backends.risingwave"
 pyspark = "ibis.backends.pyspark"
 snowflake = "ibis.backends.snowflake"

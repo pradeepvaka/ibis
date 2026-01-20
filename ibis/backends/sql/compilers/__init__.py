@@ -15,6 +15,7 @@ __all__ = [
     "MySQLCompiler",
     "OracleCompiler",
     "PostgresCompiler",
+    "PrestoCompiler",
     "PySparkCompiler",
     "RisingWaveCompiler",
     "SQLiteCompiler",
@@ -36,6 +37,7 @@ from ibis.backends.sql.compilers.mssql import MSSQLCompiler
 from ibis.backends.sql.compilers.mysql import MySQLCompiler
 from ibis.backends.sql.compilers.oracle import OracleCompiler
 from ibis.backends.sql.compilers.postgres import PostgresCompiler
+from ibis.backends.sql.compilers.presto import PrestoCompiler
 from ibis.backends.sql.compilers.pyspark import PySparkCompiler
 from ibis.backends.sql.compilers.risingwave import RisingWaveCompiler
 from ibis.backends.sql.compilers.snowflake import SnowflakeCompiler
