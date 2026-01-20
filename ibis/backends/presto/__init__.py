@@ -11,11 +11,6 @@ from urllib.parse import unquote_plus, urlparse
 import sqlglot as sg
 import sqlglot.expressions as sge
 
-try:
-    import prestodb
-except ImportError:
-    prestodb = None
-
 import ibis
 import ibis.backends.sql.compilers as sc
 import ibis.common.exceptions as com
@@ -84,13 +79,13 @@ class Backend(
         try:
             cur.execute(query)
         except Exception:
-            if hasattr(con, "transaction") and con.transaction is not None:
+            if con.transaction is not None:
                 con.rollback()
-            if hasattr(cur, "_query") and cur._query:
+            if cur._query:
                 cur.close()
             raise
         else:
-            if hasattr(con, "transaction") and con.transaction is not None:
+            if con.transaction is not None:
                 con.commit()
             return cur
 
@@ -101,14 +96,14 @@ class Backend(
         try:
             yield cur
         except Exception:
-            if hasattr(con, "transaction") and con.transaction is not None:
+            if con.transaction is not None:
                 con.rollback()
             raise
         else:
-            if hasattr(con, "transaction") and con.transaction is not None:
+            if con.transaction is not None:
                 con.commit()
         finally:
-            if hasattr(cur, "_query") and cur._query:
+            if cur._query:
                 cur.close()
 
     @contextlib.contextmanager
@@ -130,7 +125,7 @@ class Backend(
         try:
             yield cur
         finally:
-            if hasattr(cur, "_query") and cur._query:
+            if cur._query:
                 cur.close()
 
     def get_schema(
@@ -297,7 +292,9 @@ class Backend(
         >>> con = ibis.presto.connect(database=catalog, schema=schema)
         >>> con = ibis.presto.connect(database=catalog, schema=schema, source="my-app")
         """
-        if prestodb is None:
+        try:
+            import prestodb
+        except ImportError:
             raise ImportError(
                 "The 'prestodb' package is required to use the Presto backend. "
                 "Install it with `pip install 'ibis-framework[presto]'` or "
