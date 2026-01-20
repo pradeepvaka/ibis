@@ -1,0 +1,174 @@
+# Presto
+
+[https://prestodb.io](https://prestodb.io)
+
+![](https://img.shields.io/badge/memtables-fallback-yellow?style=flat-square) ![](https://img.shields.io/badge/inputs-Presto tables-blue?style=flat-square) ![](https://img.shields.io/badge/outputs-Presto tables | CSV | pandas | Parquet | PyArrow-orange?style=flat-square)
+
+## Install
+
+Install Ibis and dependencies for the Presto backend:
+
+::: {.panel-tabset}
+
+## `pip`
+
+Install with the `presto` extra:
+
+```{.bash}
+pip install 'ibis-framework[presto]'
+```
+
+And connect:
+
+```{.python}
+import ibis
+
+con = ibis.presto.connect()  # <1>
+```
+
+1. Adjust connection parameters as needed.
+
+## `conda`
+
+Install for Presto:
+
+```{.bash}
+conda install -c conda-forge ibis-presto
+```
+
+And connect:
+
+```{.python}
+import ibis
+
+con = ibis.presto.connect()  # <1>
+```
+
+1. Adjust connection parameters as needed.
+
+## `mamba`
+
+Install for Presto:
+
+```{.bash}
+mamba install -c conda-forge ibis-presto
+```
+
+And connect:
+
+```{.python}
+import ibis
+
+con = ibis.presto.connect()  # <1>
+```
+
+1. Adjust connection parameters as needed.
+
+:::
+
+
+## Connect
+
+### `ibis.presto.connect`
+
+```python
+con = ibis.presto.connect(
+    user="user",
+    password="password",
+    port=8080,
+    database="database",
+    schema="default",
+)
+```
+
+::: {.callout-note}
+`ibis.presto.connect` is a thin wrapper around [`ibis.backends.presto.Backend.do_connect`](#ibis.backends.presto.Backend.do_connect)."
+:::
+
+### Connection Parameters
+
+```{python}
+#| echo: false
+#| output: asis
+from _utils import render_do_connect
+
+render_do_connect("presto")
+```
+
+### Authenticating with Basic Authentication
+
+Ibis supports connecting to Presto clusters using basic authentication.
+
+```python
+import ibis
+
+con = ibis.presto.connect(
+  user="user",
+  auth="password",  # <1>
+  host="hostname",
+  port=8080,
+  database="database",
+  schema="default",
+)
+```
+
+1. The `auth` parameter can be a password string for basic authentication.
+
+## Differences from Trino
+
+Presto and Trino share a common ancestry (Trino was forked from PrestoDB in 2019), 
+so they have very similar SQL dialects and functionality. However, there are some differences:
+
+- **Python Client**: Presto uses the `presto-python-client` package, while Trino uses `trino`.
+- **Some SQL Functions**: Minor syntax differences may exist for some functions.
+- **Type System**: Slight variations in supported types and type behavior.
+- **Authentication**: Different authentication mechanisms may be available.
+
+## Backend-Specific Features
+
+### Catalogs and Schemas
+
+Presto organizes data in a three-level namespace:
+
+1. **Catalog**: The top level, typically corresponding to a data source (e.g., Hive, PostgreSQL)
+2. **Schema**: The second level, corresponding to a database or schema within a catalog
+3. **Table**: The actual table containing data
+
+You can specify the catalog and schema when connecting:
+
+```python
+con = ibis.presto.connect(
+    database="hive",  # catalog
+    schema="default",  # schema
+)
+```
+
+Or reference them when accessing tables:
+
+```python
+# Access a table in a different schema
+table = con.table("my_table", database=("hive", "my_schema"))
+```
+
+### Supported Operations
+
+Presto supports a wide range of SQL operations including:
+
+- Complex aggregations with filtering and ordering
+- Window functions
+- Array and map operations
+- JSON operations
+- String and date/time functions
+
+Some operations that are not supported include:
+
+- `MEDIAN` (use `approx_percentile` instead)
+- `ROW_ID` generation
+- `TIMESTAMP_BUCKET`
+
+```{python}
+#| echo: false
+BACKEND = "Presto"
+```
+
+{{< include ./_templates/api.qmd >}}
